@@ -2,14 +2,15 @@ var express = require('express');
 var router = express.Router();
 var User = require('mongoose').model('User');
 var Role = require('mongoose').model('Role');
+var passport = require('passport');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-	User.find().exec(function(err, users){
+	User.find({}).populate('role').exec(function(err, users){
 		if (err){ return next(err); }
 		res.json(users);
 	});
-})
+});
 
 router.get('/addtest', function(req, res, next) {
 	var TestAdmin = new Role({
@@ -62,6 +63,38 @@ router.post('/', function(req, res) {
             res.redirect("/");
 		}
 	})
-})
+});
+
+//isLoggedIn midleware checkt of user ingelogd is
+router.get('/profile',isLoggedIn, function(req, res, next) {
+	res.json(req.user);
+});
+
+
+router.post('/signup', passport.authenticate('local-signup'), function (req, res) {
+		res.status(201).json({'message':'account created succesful'});
+	});
+
+router.post('/login', passport.authenticate('local-login'), function (req, res) {
+		res.json({'message':'account logged in succesful'});
+	});
+
+
+
+// route middleware to make sure
+function isLoggedIn(req, res, next) {
+	// if user is authenticated in the session, carry on
+	if (req.isAuthenticated())
+		return next();
+
+	// if they aren't redirect them to the home page
+	var reqPath 	= req.path.split('/')[1];
+
+	res.status(401);
+	res.json({
+        message: 'Not logged in'
+    });
+
+}
 
 module.exports = router;
