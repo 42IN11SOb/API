@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('mongoose').model('User');
 var Role = require('mongoose').model('Role');
 var passport = require('passport');
+var controller = require('../controller/userController.js');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -75,13 +76,15 @@ router.post('/signup', passport.authenticate('local-signup'), function (req, res
 		res.status(201).json({'message':'account created succesful'});
 	});
 
-router.post('/login', passport.authenticate('local-login'), function (req, res) {
-		res.json({'message':'account logged in succesful'});
-	});
+router.post('/login', passport.authenticate('local-login'), function(req, res) {
+    controller.getToken(req.user, 'supersecrethere', function(response) {
+        res.json(response);
+    });
+});
 
 
 
-// route middleware to make sure
+/*// route middleware to make sure user is logged in: for PASSPORT
 function isLoggedIn(req, res, next) {
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
@@ -95,6 +98,12 @@ function isLoggedIn(req, res, next) {
         message: 'Not logged in'
     });
 
+}*/
+
+function isLoggedIn(req, res, next) {
+	controller.checkToken(req,'supersecrethere',next, function(response){
+		res.json(response);
+	});
 }
 
 module.exports = router;
