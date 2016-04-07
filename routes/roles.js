@@ -4,7 +4,7 @@ var Role = require('mongoose').model('Role');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-	Role.find().exec(function(err, roles){
+	Role.find().populate('users parent').exec(function(err, roles){
 		if (err){ return next(err); }
 		res.json(roles);
 	});
