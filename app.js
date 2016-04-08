@@ -8,7 +8,7 @@ var passport = require('passport');
 var session = require('express-session');
 
 var mongoose = require('mongoose');
-mongoose.connect('localhost:27017/bartimeus');
+mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/projectpep');
 //var mongo = require('mongodb');
 //var monk = require('monk');
 //var db = monk('localhost:27017/bartimeus');

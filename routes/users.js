@@ -5,6 +5,8 @@ var Role = require('mongoose').model('Role');
 var passport = require('passport');
 var controller = require('../controller/userController.js');
 
+var secret = "oogVerblindenMooi";
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	User.find({}).populate('role').exec(function(err, users){
@@ -77,7 +79,7 @@ router.post('/signup', passport.authenticate('local-signup'), function (req, res
 	});
 
 router.post('/login', passport.authenticate('local-login'), function(req, res) {
-    controller.getToken(req.user, 'supersecrethere', function(response) {
+    controller.getToken(req.user, secret, function(response) {
         res.json(response);
     });
 });
@@ -101,7 +103,7 @@ function isLoggedIn(req, res, next) {
 }*/
 
 function isLoggedIn(req, res, next) {
-	controller.checkToken(req,'supersecrethere',next, function(response){
+	controller.checkToken(req, secret,next, function(response){
 		res.json(response);
 	});
 }
