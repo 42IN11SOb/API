@@ -15,7 +15,7 @@ exports.getToken = function(user, secret, callback) {
 exports.checkToken = function(req, secret, next, callback) {
 
     // check header for token
-    var token = req.body.token || req.body.token || req.session.token; //req.headers['x-access-token'];
+    var token = req.headers['x-access-token'];
     // decode token
     if (token) {
         // verifies secret and checks exp
