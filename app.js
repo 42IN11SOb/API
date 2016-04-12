@@ -13,12 +13,6 @@ mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/project
 //var monk = require('monk');
 //var db = monk('localhost:27017/bartimeus');
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
-
 // Models and repos
 
 require('./model/user');
@@ -31,6 +25,12 @@ var users = require('./routes/users');
 var roles = require('./routes/roles');
 
 var app = express();
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 require('./config/passport')(passport); // pass passport for configuration
 
