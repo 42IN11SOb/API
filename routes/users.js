@@ -15,41 +15,6 @@ router.get('/', function(req, res, next) {
 	});
 });
 
-router.get('/addtest', function(req, res, next) {
-	var TestAdmin = new Role({
-		name: "TestAdmin"
-	});
-
-	TestAdmin.save(function(err){
-		//if (err) return handleError(err);
-
-		var Admin = new User({
-			username: "Admin",
-			password: "test1235",
-			active: true,
-			email: "info@bartimeus.nl",
-			role: TestAdmin._id
-		});
-
-		Admin.save(function(err){
-			if (err) res.send(err + " An error occured"); 
-			else //return handleError(err);
-				res.send("Saved user");
-		})
-	});
-
-});
-
-/*router.get('/', function(req, res, next) { 
-  User.find().exec(function(e, users){
-  	//res.render('users/index', {
-  		if (e){ return next(e); }
-  		res.json(users);
-  		//"users" : docs
-  	//});
-  });
-});*/
-
 router.post('/', function(req, res) {
 	var db = req.db;
 
@@ -73,6 +38,13 @@ router.get('/profile',isLoggedIn, function(req, res, next) {
 	res.json(req.user);
 });
 
+router.get('/login', function(req, res, next) {
+	res.render('users/login');
+});
+
+router.get('/signup', function(req, res, next) {
+	res.render('users/signup');
+});
 
 router.post('/signup', passport.authenticate('local-signup'), function (req, res) {
 		res.status(201).json({'message':'account created succesful'});
