@@ -64,6 +64,16 @@ router.post('/login', passport.authenticate('local-login'), function(req, res) {
         });
 });
 
+router.post('/logout', function(req, res, next) {
+	req.logout();
+	req.userID = null;
+
+	res.json({
+		success: true,
+		message: "Logout succesful."
+	});
+});
+
 function isLoggedIn(req, res, next) {
 	controller.checkToken(req, secret, next, function(response){
 		if(!response.success)
