@@ -47,31 +47,12 @@ router.get('/', function(req, res, next) {
   });
 });*/
 
-router.post('/', function(req, res) {
-	var db = req.db;
-
-	// get the fields
-
-	var collection = db.get('user');
-
-	collection.insert({
-		// set the fields
-	}, function(err, doc) {
-		if (err) {
-            res.send("There was an error");
-		} else {
-            res.redirect("/");
-		}
-	})
-});
-
 //isLoggedIn midleware checkt of user ingelogd is
 router.get('/profile',isLoggedIn, function(req, res, next) {
 	controller.getProfile(req.userID, function(response) {
 		res.json(response);
 	});
 });
-
 
 router.post('/signup', passport.authenticate('local-signup'), function (req, res) {
 		res.status(201).json({'message':'account created succesful'});
@@ -82,22 +63,6 @@ router.post('/login', passport.authenticate('local-login'), function(req, res) {
             res.json(response);
         });
 });
-
-/*// route middleware to make sure user is logged in: for PASSPORT
-function isLoggedIn(req, res, next) {
-	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
-
-	// if they aren't redirect them to the home page
-	var reqPath 	= req.path.split('/')[1];
-
-	res.status(401);
-	res.json({
-        message: 'Not logged in'
-    });
-
-}*/
 
 function isLoggedIn(req, res, next) {
 	controller.checkToken(req, secret, next, function(response){
