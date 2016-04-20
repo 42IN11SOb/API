@@ -1,4 +1,6 @@
 var jwt             = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var User = require('mongoose').model('User');
+var Role = require('mongoose').model('Role');
 
 exports.getToken = function(user, secret, callback) {
     var token = jwt.sign(user, secret, {
@@ -7,13 +9,12 @@ exports.getToken = function(user, secret, callback) {
 
     callback({
     	success:true,
-    	message: 'enjoy your oken',
+    	message: 'enjoy your token',
     	token: token
     });
 };
 
 exports.checkToken = function(req, secret, next, callback) {
-
     // check header for token
     var token = req.headers['x-access-token'];
     // decode token
@@ -22,7 +23,7 @@ exports.checkToken = function(req, secret, next, callback) {
         jwt.verify(token, secret, function(err, decoded) {
             if (err) {
                 callback({ success: false, message: 'Failed to authenticate token.' });
-            } else {
+            } else {/*
                 if (req.isAuthenticated()) {
                     // if everything is good, save to request for use in other routes
                     req.decoded = decoded;
@@ -32,7 +33,11 @@ exports.checkToken = function(req, secret, next, callback) {
                         success: false,
                         message: 'Not logged in'
                     })
-                }
+                }*/
+
+                req.decoded = decoded;
+                req.userID = decoded._doc._id;
+                next();
             }
         });
 
@@ -41,7 +46,35 @@ exports.checkToken = function(req, secret, next, callback) {
         // return an error
         callback({
             success: false,
-            message: 'No token provided.'
+            message: 'No token provided. Or token invalid'
         });
     }
 };
+
+exports.getProfile = function(id, callback) {
+    User.findOne({
+        _id: id
+    }).populate('role').exec(function(err, user) {
+        if (err) { callback(err) }
+        if (!user) {
+            callback({
+                success: false,
+                message: "User not found."
+            });
+        }
+        callback({
+            success: true,
+            user: user
+        });
+    });
+};
+
+exports.getAll = function(callback) {
+    User.find({}).populate('role').exec(function(err, users){
+        if (err){ return next(err); }
+        callback({
+            success:true,
+            users:users
+        });
+    });
+}

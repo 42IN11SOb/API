@@ -19,7 +19,6 @@ require('./model/user');
 require('./model/role');
 
 // Routes
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var roles = require('./routes/roles');
@@ -28,7 +27,7 @@ var app = express();
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
   next();
 });
 
