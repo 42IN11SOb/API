@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var controller = require('../controller/seasonController.js');
+var userController = require('../controller/userController.js');
 
 var secret = "oogVerblindenMooi";
 
@@ -14,7 +15,7 @@ router.get('/',isLoggedIn, function(req, res, next) {
 });
 
 function isLoggedIn(req, res, next) {
-	controller.checkToken(req, secret, next, function(response){
+	userController.checkToken(req, secret, next, function(response){
 		if(!response.success)
 			res.json(response);
 	});
