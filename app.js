@@ -17,12 +17,13 @@ mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/project
 
 require('./model/user');
 require('./model/role');
+require('./model/season');
 
 // Routes
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var roles = require('./routes/roles');
+var seasons = require('./routes/seasons');
 
 var app = express();
 
@@ -58,6 +59,7 @@ app.use(passport.session()); // persistent login sessions
 app.use('/', routes);
 app.use('/users', users);
 app.use('/roles', roles);
+app.use('/seasons', seasons);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
