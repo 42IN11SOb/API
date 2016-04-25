@@ -60,6 +60,7 @@ router.post('/signup', passport.authenticate('local-signup'), function (req, res
 
 router.post('/login', passport.authenticate('local-login'), function(req, res) {
         controller.getToken(req.user, secret, function(response) {
+        	req.session.token = response.token;
             res.json(response);
         });
 });

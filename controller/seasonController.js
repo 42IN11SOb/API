@@ -6,7 +6,7 @@ controller.getSeasons = function getSeasons(req, res, callback){
 	if (req.params.id){
 		query._id = req.params.id;
 	}
-	var result = Season.find(query).populate('colors');
+	var results = Season.find(query).populate('colors');
 
 	results.exec(function(err, data){
 		if (req.params.id && data != null){
