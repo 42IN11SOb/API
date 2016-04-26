@@ -75,6 +75,15 @@ router.post('/logout', function(req, res, next) {
 	});
 });
 
+router.get('/loggedIn', isLoggedIn, function(req, res, next) {
+	if(req.userID != null) {
+		res.json({
+			success: true,
+			message: "User is logged in."
+		});
+	}
+});
+
 function isLoggedIn(req, res, next) {
 	controller.checkToken(req, secret, next, function(response){
 		if(!response.success)
