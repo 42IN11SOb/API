@@ -10,7 +10,18 @@ var secret = "oogVerblindenMooi";
 router.get('/',isLoggedIn, function(req, res, next) {
 	controller.getSeason(req, res, function callback(data, err){
 		if (err) return;
-		res.json(data);
+		// res.json(data);
+		//dummy data remove when database is populated
+		var dummySeason =  [
+
+			{r:123,g:211,b:255},
+			{r:1,g:200,b:0},
+			{r:150,g:0,b:12},
+			{r:255,g:125,b:255},
+			{r:0,g:0,b:0}
+		];
+
+		res.json(dummySeason);
 	});
 });
 
@@ -20,5 +31,14 @@ function isLoggedIn(req, res, next) {
 			res.json(response);
 	});
 }
+
+//add season
+router.post('/postSeason',isLoggedIn,function(req,res,next) {
+	controller.postSeason(req,res,function callback(data, err){
+		if (err) return;
+		res.json(data);
+	});
+
+});
 
 module.exports = router;

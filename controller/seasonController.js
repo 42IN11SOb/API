@@ -28,3 +28,5 @@ controller.getSeason = function getSeason(req, res, callback){
 		callback(data, err);
 	});
 }
+
+controller.postSeason = function postSeason(req, res, callback){}
