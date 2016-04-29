@@ -2,9 +2,18 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var colorSchema = new Schema({
-	r : {type: Number, required: true},
-	g : {type: number, required: true},
-	b : {type: number, required: true},
+    r: {
+        type: Number,
+        required: true
+    },
+    g: {
+        type: Number,
+        required: true
+    },
+    b: {
+        type: Number,
+        required: true
+    },
 });
 
-var Color	= mongoose.model('Color', colorSchema);
+var Color = mongoose.model('Color', colorSchema);

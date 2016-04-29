@@ -1,41 +1,36 @@
-var jwt             = require('jsonwebtoken'); // used to create, sign, and verify tokens
+'use strict';
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var User = require('mongoose').model('User');
 var Role = require('mongoose').model('Role');
+var pjson = require('../package.json');
+var userController = exports;
 
-exports.getToken = function(user, secret, callback) {
-    var token = jwt.sign(user, secret, {
-        expiresIn: 86400 // expires in 24 hours
+userController.getToken = function (user, callback) {
+    var token = jwt.sign(user, pjson.secret, {
+        expiresIn: '1 year' // expires in 24 hours
     });
 
     callback({
-    	success:true,
-    	message: 'enjoy your token',
-    	token: token
+        success: true,
+        message: 'Enjoy your token',
+        token: token
     });
 };
 
-exports.checkToken = function(req, secret, next, callback) {
+userController.checkToken = function (req, next, callback) {
     // check header for token
     // var token = req.headers['x-access-token'];
-    var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.session.token;
+    var token = req.headers.authorization || req.query.token || req.headers['x-access-token'];
     // decode token
     if (token) {
         // verifies secret and checks exp
-        jwt.verify(token, secret, function(err, decoded) {
+        jwt.verify(token, pjson.secret, function (err, decoded) {
             if (err) {
-                callback({ success: false, message: 'Failed to authenticate token.' });
-            } else {/*
-                if (req.isAuthenticated()) {
-                    // if everything is good, save to request for use in other routes
-                    req.decoded = decoded;
-                    next();
-                } else {
-                    callback({
-                        success: false,
-                        message: 'Not logged in'
-                    })
-                }*/
-
+                callback({
+                    success: false,
+                    message: 'Failed to authenticate token.'
+                });
+            } else {
                 req.decoded = decoded;
                 req.userID = decoded._doc._id;
                 next();
@@ -52,30 +47,109 @@ exports.checkToken = function(req, secret, next, callback) {
     }
 };
 
-exports.getProfile = function(id, callback) {
+userController.getProfile = function (id, callback) {
     User.findOne({
-        _id: id
-    }).populate('role').exec(function(err, user) {
-        if (err) { callback(err) }
-        if (!user) {
+            _id: id
+        })
+        .populate('role')
+        .populate('passport')
+        .exec(function (err, user) {
+            if (err) {
+                callback(err)
+            }
+            if (!user) {
+                callback({
+                    success: false,
+                    message: "User not found."
+                });
+            }
+
+            var options = {
+                path: 'passport.season',
+                model: 'Season'
+            };
+
+            user.populate(options, function (err, user) {
+                callback({
+                    success: true,
+                    user: user
+                });
+            });
+        });
+};
+
+userController.getAll = function (callback) {
+    User.find({}).populate('role').exec(function (err, users) {
+        if (err) {
+            return next(err);
+        }
+        callback({
+            success: true,
+            users: users
+        });
+    })
+};
+
+userController.createUser = function (callback) {
+    User.findOne({
+        'username': username
+    }, function (err, user) {
+        // if there are any errors, return the error
+        if (err)
+            return callback(err);
+
+        // check to see if theres already a user with that email
+        if (user) {
+            return callback(false, {
+                'signupMessage': 'That username is already taken.'
+            });
+        } else {
+            // if there is no user with that email
+            // create the user
+            var newUser = new User();
+
+            // set the user's local credentials
+            newUser.email = req.body.email;
+            newUser.password = newUser.generateHash(password); // use the generateHash function in our user model
+            newUser.username = username;
+            newUser.active = true;
+            newUser.role = req.body.role; ///for now
+
+            // save the user
+            newUser.save(function (err) {
+                if (err)
+                    throw err;
+                return callback(newUser);
+            });
+        }
+
+    });
+}
+
+userController.updateUser = function (userData, callback) {
+
+    User.findOne({
+        '_id': userData.userID
+    }, function (err, user) {
+        // if there are any errors, return the error
+        if (err)
+            return callback(err);
+
+        // check to see if theres already a user with that email
+        if (user) {
+            user.passport = userData.passport;
+            user.save();
+            return callback({
+                success: true,
+                message: "User updated",
+                user: user
+            });
+        } else {
             callback({
                 success: false,
                 message: "User not found."
             });
         }
-        callback({
-            success: true,
-            user: user
-        });
-    });
-};
 
-exports.getAll = function(callback) {
-    User.find({}).populate('role').exec(function(err, users){
-        if (err){ return next(err); }
-        callback({
-            success:true,
-            users:users
-        });
     });
 }
