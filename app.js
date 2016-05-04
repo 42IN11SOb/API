@@ -15,7 +15,7 @@ mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/project
 //var monk = require('monk');
 //var db = monk('localhost:27017/bartimeus');
 
-var models = ['user', 'color', 'figure', 'passport', 'role', 'season', 'seasoncolor'];
+var models = ['user', 'color', 'figure', 'passport', 'role', 'season'];
 
 var l = models.length;
 for (var i = l - 1; i >= 0; i--) {
@@ -29,6 +29,8 @@ var users = require('./routes/users');
 var roles = require('./routes/roles');
 var admin = require('./routes/admin');
 var routes = require('./routes/index');
+var colors = require('./routes/colors');
+var figures = require('./routes/figure');
 var seasons = require('./routes/seasons');
 var passports = require('./routes/passport');
 
@@ -61,6 +63,8 @@ app.use('/roles', roles);
 app.use('/users', users);
 app.use('/seasons', seasons);
 app.use('/admin', admin);
+app.use('/colors', colors);
+app.use('/figures', figures);
 app.use('/passports', passports);
 
 // Middleware error handling

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var seasonSchema = new Schema({
+    id: mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
         required: true
@@ -9,7 +10,7 @@ var seasonSchema = new Schema({
     colors: [{
         color: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'SeasonColor'
+            ref: 'Color'
         },
     }]
 });

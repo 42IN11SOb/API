@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var roleSchema = new Schema({
+    id: mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
         required: true
@@ -9,13 +10,7 @@ var roleSchema = new Schema({
     parent: {
         type: Schema.Types.ObjectId,
         ref: 'Role'
-    },
-
-    // The other way around
-    users: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }]
+    }
 });
 
 var Role = mongoose.model('Role', roleSchema);
