@@ -26,11 +26,11 @@ var userSchema = new Schema({
         required: true
     },
     role: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Role'
     },
     passport: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Passport'
     }
 });
@@ -45,4 +45,4 @@ userSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-var User = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);
