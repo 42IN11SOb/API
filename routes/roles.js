@@ -1,17 +1,26 @@
+'use strict';
 var express = require('express');
 var router = express.Router();
-var Role = require('mongoose').model('Role');
+var roleController = require('../controller/roleController.js');
+var middlewares = require('../middlewares/middlewares');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-	Role.find().populate('users parent').exec(function(err, roles){
-		if (err){ return next(err); }
-		res.json(roles);
-	});
+router.get('/', middlewares.isLoggedIn, function (req, res, next) {
+    roleController.getRoles(function (result) {
+        res.send(result);
+    });
 })
 
-/*router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});*/
+router.post('/', middlewares.isLoggedIn, function (req, res, next) {
+    var role = {};
+
+    role.name = req.body.name;
+    role.parent = req.body.parent;
+    role.users = req.body.users;
+
+    roleController.createRole(role, function (result) {
+        res.send(result);
+    });
+})
 
 module.exports = router;
