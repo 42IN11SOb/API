@@ -63,16 +63,30 @@ userController.getProfile = function (id, callback) {
                     message: "User not found."
                 });
             }
-
+            var populateQuery = [{
+                path: 'passport.season',
+                model: 'Season'
+            }, {
+                path: 'passport.figure',
+                model: 'Figure'
+            }];
             var options = {
                 path: 'passport.season',
                 model: 'Season'
             };
 
-            user.populate(options, function (err, user) {
-                callback({
-                    success: true,
-                    user: user
+            user.populate(populateQuery, function (err, user) {
+
+                var options = {
+                    path: 'passport.season.colors.color',
+                    model: 'Color'
+                };
+                user.populate(options, function (err, user) {
+
+                    callback({
+                        success: true,
+                        user: user
+                    });
                 });
             });
         });
