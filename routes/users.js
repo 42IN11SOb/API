@@ -25,13 +25,17 @@ router.put('/profile', middlewares.isLoggedIn, function (req, res) {
     });
 });
 
-router.post('/signup', passport.authenticate('local-signup'), function (req, res) {
+router.post('/signup', passport.authenticate('local-signup', {
+    session: false
+}), function (req, res) {
     res.status(201).json({
         'message': 'account created succesful'
     });
 });
 
-router.post('/login', passport.authenticate('local-login'), function (req, res) {
+router.post('/login', passport.authenticate('local-login', {
+    session: false
+}), function (req, res) {
     controller.getToken(req.user, function (response) {
         res.json(response);
     });
