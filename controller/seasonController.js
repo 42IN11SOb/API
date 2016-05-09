@@ -3,24 +3,24 @@ var controller = exports;
 
 controller.getSeasons = function (callback) {
     Season.find({})
-        .populate('colors')
+        .populate('colors.color')
         .exec(function (err, data) {
             console.log(err);
 
             callback({
                 success: true,
-                users: data
+                seasons: data
             }, err);
         });
 };
 
-controller.getSeason = function (req, res, callback) {
+controller.getSeason = function (season, callback) {
     var query = {};
-    if (req.params.id) {
-        query._id = req.params.id;
+    if (season.name) {
+        query.name = season.name;
     }
 
-    var result = Season.findOne(query).populate('colors');
+    var result = Season.findOne(query).populate('colors.color');
     result.exec(function (err, data) {
         callback(data, err);
     });
@@ -38,5 +38,21 @@ controller.createSeason = function (season, callback) {
         }
         return callback(newSeason);
     });
+};
 
+controller.updateSeason = function (season, callback) {
+    var query = {};
+    if (season.name) {
+        query.name = season.name;
+    }
+
+    console.log(season);
+
+    Season.findOneAndUpdate(query,
+        season, {},
+        function (err, data) {
+            console.log(data);
+            callback(data, err);
+        }
+    );
 };

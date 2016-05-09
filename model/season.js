@@ -5,13 +5,14 @@ var seasonSchema = new Schema({
     id: mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     colors: [{
         color: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Color'
-        },
+        }
     }]
 });
 
