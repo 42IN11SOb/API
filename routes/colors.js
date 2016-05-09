@@ -22,9 +22,29 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
 });
 
 //get single seaons
+router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
+    var color = req.body;
+    controller.getColor(req.params.name, function callback(data, err) {
+        if (err) return;
+
+        res.json(data);
+    });
+});
+
+//get single seaons
 router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
     var color = req.body;
-    controller.updateColors(req.params.name, color, function callback(data, err) {
+    controller.updateColor(req.params.name, color, function callback(data, err) {
+        if (err) return;
+
+        res.json(data);
+    });
+});
+
+//get single seaons
+router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
+    var color = req.body;
+    controller.deleteColor(req.params.name, function callback(data, err) {
         if (err) return;
 
         res.json(data);
