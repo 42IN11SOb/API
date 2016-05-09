@@ -32,6 +32,8 @@ controller.updateColors = function (identifier, color, callback) {
         query.name = identifier;
     }
 
+    console.log(color);
+
     Color.findOneAndUpdate(query,
         color, {
             autoIndexId: false,
