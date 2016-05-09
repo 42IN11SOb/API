@@ -9,6 +9,7 @@ var seasonSchema = new Schema({
         unique: true
     },
     colors: [{
+        _id: false,
         color: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Color'

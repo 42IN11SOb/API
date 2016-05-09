@@ -46,13 +46,27 @@ controller.updateSeason = function (season, callback) {
         query.name = season.name;
     }
 
-    console.log(season);
-
     Season.findOneAndUpdate(query,
-        season, {},
+        season, {
+            autoIndexId: false,
+            upsert: true,
+            new: true
+        },
         function (err, data) {
-            console.log(data);
+            data.success = true;
             callback(data, err);
         }
     );
+};
+
+controller.deleteSeason = function (season, callback) {
+    var query = {};
+    if (season.name) {
+        query.name = season.name;
+    }
+
+    var result = Season.findOne(query);
+    result.remove().exec(function (err, data) {
+        callback(data, err);
+    });
 };
