@@ -12,9 +12,19 @@ router.get('/', middlewares.isLoggedIn, function (req, res, next) {
     });
 });
 
+//add season
+router.post('/', middlewares.isLoggedIn, function (req, res, next) {
+    controller.createSeason(req.body, function callback(data, err) {
+        if (err) return;
+        res.json(data);
+    });
+
+});
+
 //get single seaons
 router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
-    controller.getSeason(req.params, function callback(data, err) {
+    var season = req.body;
+    controller.getSeason(req.params.name, function callback(data, err) {
         if (err) return;
 
         res.json(data);
@@ -24,9 +34,7 @@ router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
 //get single seaons
 router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
     var season = req.body;
-    season.name = req.params.name;
-    console.log(season);
-    controller.updateSeason(season, function callback(data, err) {
+    controller.updateSeason(req.params.name, season, function callback(data, err) {
         if (err) return;
 
         res.json(data);
@@ -35,20 +43,12 @@ router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
 
 //get single seaons
 router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
-    controller.deleteSeason(req.params, function callback(data, err) {
+    var season = req.body;
+    controller.deleteSeason(req.params.name, function callback(data, err) {
         if (err) return;
 
         res.json(data);
     });
-});
-
-//add season
-router.post('/', middlewares.isLoggedIn, function (req, res, next) {
-    controller.createSeason(req.body, function callback(data, err) {
-        if (err) return;
-        res.json(data);
-    });
-
 });
 
 module.exports = router;

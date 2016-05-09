@@ -1,11 +1,9 @@
 var Season = require('mongoose').model('Season');
 var controller = exports;
 
-controller.getSeasons = function (callback) {
-    Season.find({})
-        .populate('colors.color')
-        .exec(function (err, data) {
-            console.log(err);
+controller.getSeasons = function(callback) {
+    Season.find({}).populate("colors.color")
+        .exec(function(err, data) {
 
             callback({
                 success: true,
@@ -14,25 +12,77 @@ controller.getSeasons = function (callback) {
         });
 };
 
-controller.getSeason = function (season, callback) {
+controller.getSeason = function(identifier, callback) {
     var query = {};
-    if (season.name) {
-        query.name = season.name;
+    if (identifier) {
+        query.name = identifier;
     }
 
-    var result = Season.findOne(query).populate('colors.color');
-    result.exec(function (err, data) {
-        callback(data, err);
+    var result = Season.findOne(query).populate("colors.color");
+    result.exec(function(err, data) {
+
+        if (data) {
+            callback(data, err);
+        } else {
+            query = {};
+            if (identifier) {
+                query._id = identifier;
+            }
+
+            var result = Season.findOne(query).populate("colors.color");
+            result.exec(function(err, data) {
+                callback(data, err);
+            });
+        }
+
     });
 };
 
-controller.createSeason = function (season, callback) {
+controller.updateSeason = function(identifier, season, callback) {
+    var query = {};
+    if (identifier) {
+        query.name = identifier;
+    }
+
+    Season.findOneAndUpdate(query,
+        season, {
+            autoIndexId: false,
+            upsert: false,
+            new: true
+        },
+        function(err, data) {
+            if (data) {
+                callback(data, err);
+            } else {
+                var query = {};
+                if (identifier) {
+                    query._id = identifier;
+                }
+
+                Season.findOneAndUpdate(query,
+                    season, {
+                        autoIndexId: false,
+                        upsert: false,
+                        new: true
+                    },
+                    function(err, data) {
+                        callback(data, err);
+                    }
+                );
+            }
+        }
+    );
+};
+
+controller.createSeason = function(season, callback) {
     console.log(season);
     var newSeason = new Season();
-    newSeason.name = season.name;
-    //season.colors = season.colors;
 
-    newSeason.save(function (err) {
+    for (var item in season) {
+        newSeason[item] = season[item];
+    }
+
+    newSeason.save(function(err) {
         if (err) {
             throw err;
         }
@@ -40,33 +90,29 @@ controller.createSeason = function (season, callback) {
     });
 };
 
-controller.updateSeason = function (season, callback) {
+controller.deleteSeason = function(identifier, callback) {
     var query = {};
-    if (season.name) {
-        query.name = season.name;
+    if (identifier) {
+        query.name = identifier;
     }
 
-    Season.findOneAndUpdate(query,
-        season, {
-            autoIndexId: false,
-            upsert: true,
-            new: true
-        },
-        function (err, data) {
-            data.success = true;
-            callback(data, err);
+    Season.findOneAndRemove(query,
+        function(err, data) {
+            if (data) {
+                callback(data, err);
+            } else {
+                var query = {};
+                if (identifier) {
+                    query._id = identifier;
+                }
+
+                Season.findOneAndRemove(query,
+                    function(err, data) {
+                        data.status = "deleted";
+                        callback(data, err);
+                    }
+                );
+            }
         }
     );
-};
-
-controller.deleteSeason = function (season, callback) {
-    var query = {};
-    if (season.name) {
-        query.name = season.name;
-    }
-
-    var result = Season.findOne(query);
-    result.remove().exec(function (err, data) {
-        callback(data, err);
-    });
 };

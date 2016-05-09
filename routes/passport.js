@@ -21,4 +21,34 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
 
 });
 
+//get single seaons
+router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
+    var passport = req.body;
+    controller.getPassport(req.params.name, function callback(data, err) {
+        if (err) return;
+
+        res.json(data);
+    });
+});
+
+//get single seaons
+router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
+    var passport = req.body;
+    controller.updatePassport(req.params.name, passport, function callback(data, err) {
+        if (err) return;
+
+        res.json(data);
+    });
+});
+
+//get single seaons
+router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
+    var passport = req.body;
+    controller.deletePassport(req.params.name, function callback(data, err) {
+        if (err) return;
+
+        res.json(data);
+    });
+});
+
 module.exports = router;

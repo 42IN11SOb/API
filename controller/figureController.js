@@ -1,47 +1,118 @@
 var Figure = require('mongoose').model('Figure');
 var controller = exports;
 
-controller.getFigures = function (callback) {
+controller.getFigures = function(callback) {
     Figure.find({})
-        .populate('colors')
-        .exec(function (err, data) {
-            console.log(err);
+        .exec(function(err, data) {
 
             callback({
                 success: true,
-                users: data
+                figures: data
             }, err);
         });
 };
 
-controller.getFigure = function (req, res, callback) {
+controller.getFigure = function(identifier, callback) {
     var query = {};
-    if (req.params.id) {
-        query._id = req.params.id;
+    if (identifier) {
+        query.title = identifier;
     }
 
-    var result = Figure.findOne(query).populate('colors');
-    result.exec(function (err, data) {
-        callback(data, err);
+    var result = Figure.findOne(query)
+    result.exec(function(err, data) {
+
+        if (data) {
+            callback(data, err);
+        } else {
+            query = {};
+            if (identifier) {
+                query._id = identifier;
+            }
+
+            var result = Figure.findOne(query)
+            result.exec(function(err, data) {
+                callback(data, err);
+            });
+        }
+
     });
 };
 
-controller.createFigure = function (season, callback) {
-    console.log(season);
-    var newFigure = new Figure();
-    newFigure.title = season.title;
-    newFigure.advice = season.advice;
-    newFigure.dos = season.dos;
-    newFigure.donts = season.donts;
-    newFigure.img = season.img;
-    newFigure.info = season.info;
-    //season.colors = season.colors;
+controller.updateFigure = function(identifier, figure, callback) {
+    var query = {};
+    if (identifier) {
+        query.title = identifier;
+    }
 
-    newFigure.save(function (err) {
+    Figure.findOneAndUpdate(query,
+        figure, {
+            autoIndexId: false,
+            upsert: false,
+            new: true
+        },
+        function(err, data) {
+            if (data) {
+                callback(data, err);
+            } else {
+                var query = {};
+                if (identifier) {
+                    query._id = identifier;
+                }
+
+                Figure.findOneAndUpdate(query,
+                    figure, {
+                        autoIndexId: false,
+                        upsert: false,
+                        new: true
+                    },
+                    function(err, data) {
+                        callback(data, err);
+                    }
+                );
+            }
+        }
+    );
+};
+
+controller.createFigure = function(figure, callback) {
+    console.log(figure);
+    var newFigure = new Figure();
+
+    for (var item in figure) {
+        newFigure[item] = figure[item];
+    }
+
+    newFigure.save(function(err) {
         if (err) {
             throw err;
         }
         return callback(newFigure);
     });
+};
 
+controller.deleteFigure = function(identifier, callback) {
+    var query = {};
+    if (identifier) {
+        query.title = identifier;
+    }
+
+    Figure.findOneAndRemove(query,
+        function(err, data) {
+            if (data) {
+                callback(data, err);
+            } else {
+                var query = {};
+                if (identifier) {
+                    query._id = identifier;
+                }
+
+                Figure.findOneAndRemove(query,
+                    function(err, data) {
+                        data.status = "deleted";
+                        callback(data, err);
+                    }
+                );
+            }
+        }
+    );
 };

@@ -5,7 +5,8 @@ var figure = new Schema({
     id: mongoose.Schema.Types.ObjectId,
     title: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     info: {
         type: String,
