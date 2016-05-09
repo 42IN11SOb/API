@@ -26,14 +26,33 @@ controller.getColor = function (req, res, callback) {
     });
 };
 
-controller.createColor = function (season, callback) {
-    console.log(season);
+controller.updateColors = function (identifier, color, callback) {
+    var query = {};
+    if (identifier) {
+        query.name = identifier;
+    }
+
+    Season.findOneAndUpdate(query,
+        color, {
+            autoIndexId: false,
+            upsert: true,
+            new: true
+        },
+        function (err, data) {
+            data.success = true;
+            callback(data, err);
+        }
+    );
+};
+
+controller.createColor = function (color, callback) {
+    console.log(color);
     var newColor = new Color();
-    newColor.name = season.name;
-    newColor.r = season.r;
-    newColor.g = season.g;
-    newColor.b = season.b;
-    //season.colors = season.colors;
+    newColor.name = color.name;
+    newColor.r = color.r;
+    newColor.g = color.g;
+    newColor.b = color.b;
+    //color.colors = color.colors;
 
     newColor.save(function (err) {
         if (err) {

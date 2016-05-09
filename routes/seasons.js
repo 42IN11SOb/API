@@ -33,6 +33,15 @@ router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
     });
 });
 
+//get single seaons
+router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
+    controller.deleteSeason(req.params, function callback(data, err) {
+        if (err) return;
+
+        res.json(data);
+    });
+});
+
 //add season
 router.post('/', middlewares.isLoggedIn, function (req, res, next) {
     controller.createSeason(req.body, function callback(data, err) {
