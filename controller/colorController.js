@@ -32,7 +32,7 @@ controller.updateColors = function (identifier, color, callback) {
         query.name = identifier;
     }
 
-    Season.findOneAndUpdate(query,
+    Color.findOneAndUpdate(query,
         color, {
             autoIndexId: false,
             upsert: true,
