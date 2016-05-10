@@ -19,15 +19,15 @@ router.put('/:name', function(req, res) {
 });
 
 //isLoggedIn midleware checkt of user ingelogd is
-router.get('/:name', middlewares.isLoggedIn, function(req, res) {
-    controller.getProfile(req.params.name, function(response) {
+router.get('/profile', middlewares.isLoggedIn, function(req, res) {
+    controller.getProfile(req.userID, function(response) {
         res.json(response);
     });
 });
 
 //isLoggedIn midleware checkt of user ingelogd is
-router.get('/profile', middlewares.isLoggedIn, function(req, res) {
-    controller.getProfile(req.userID, function(response) {
+router.get('/:name', middlewares.isLoggedIn, function(req, res) {
+    controller.getProfile(req.params.name, function(response) {
         res.json(response);
     });
 });
