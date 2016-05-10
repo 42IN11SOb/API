@@ -9,24 +9,19 @@ var figure = new Schema({
         unique: true
     },
     info: {
-        type: String,
-        required: true
+        type: String
     },
     advice: {
-        type: String,
-        required: true
+        type: String
     },
     dos: {
-        type: [String],
-        required: true
+        type: [String]
     },
     donts: {
-        type: [String],
-        required: true
+        type: [String]
     },
     img: {
-        type: String,
-        required: true
+        type: String
     },
 });
 
