@@ -7,6 +7,7 @@ var middlewares = require('../middlewares/middlewares');
 /* GET users listing. */
 router.get('/', middlewares.isLoggedIn, function (req, res, next) {
     roleController.getRoles(function (result) {
+        result.succes = true;
         res.send(result);
     });
 })

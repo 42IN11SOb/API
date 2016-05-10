@@ -12,10 +12,7 @@ controller.getPassports = function(callback) {
     Passport.find({}).populate(populateQuery)
         .exec(function(err, data) {
 
-            callback({
-                success: true,
-                passports: data
-            }, err);
+            callback( data, err);
         });
 };
 
