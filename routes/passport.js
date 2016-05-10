@@ -23,7 +23,6 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
 
 //get single seaons
 router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
-    var passport = req.body;
     controller.getPassport(req.params.name, function callback(data, err) {
         if (err) return;
 

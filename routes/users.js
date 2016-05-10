@@ -5,29 +5,43 @@ var controller = require('../controller/userController.js');
 var middlewares = require('../middlewares/middlewares');
 
 /* GET users listing. */
-router.get('/', function (req, res) {
-    controller.getAll(function (response) {
+router.get('/', function(req, res) {
+    controller.getAll(function(response) {
+        res.json(response);
+    });
+});
+
+/* GET users listing. */
+router.put('/:name', function(req, res) {
+    controller.updateUser(req.params.name, req.body, function(response) {
         res.json(response);
     });
 });
 
 //isLoggedIn midleware checkt of user ingelogd is
-router.get('/profile', middlewares.isLoggedIn, function (req, res) {
-    controller.getProfile(req.userID, function (response) {
+router.get('/:name', middlewares.isLoggedIn, function(req, res) {
+    controller.getProfile(req.params.name, function(response) {
         res.json(response);
     });
 });
 
-router.put('/profile', middlewares.isLoggedIn, function (req, res) {
+//isLoggedIn midleware checkt of user ingelogd is
+router.get('/profile', middlewares.isLoggedIn, function(req, res) {
+    controller.getProfile(req.userID, function(response) {
+        res.json(response);
+    });
+});
+
+router.put('/profile', middlewares.isLoggedIn, function(req, res) {
     req.body.userID = req.userID;
-    controller.updateUser(req.body, function (response) {
+    controller.updateUser(req.body, function(response) {
         res.json(response);
     });
 });
 
 router.post('/signup', passport.authenticate('local-signup', {
     session: false
-}), function (req, res) {
+}), function(req, res) {
     res.status(201).json({
         'message': 'account created succesful'
     });
@@ -35,13 +49,13 @@ router.post('/signup', passport.authenticate('local-signup', {
 
 router.post('/login', passport.authenticate('local-login', {
     session: false
-}), function (req, res) {
-    controller.getToken(req.user, function (response) {
+}), function(req, res) {
+    controller.getToken(req.user, function(response) {
         res.json(response);
     });
 });
 
-router.post('/logout', function (req, res) {
+router.post('/logout', function(req, res) {
     req.logout();
     req.userID = null;
 
@@ -51,7 +65,7 @@ router.post('/logout', function (req, res) {
     });
 });
 
-router.get('/loggedIn', middlewares.isLoggedIn, function (req, res) {
+router.get('/loggedIn', middlewares.isLoggedIn, function(req, res) {
     if (req.userID != null) {
         res.json({
             success: true,

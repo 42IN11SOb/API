@@ -5,7 +5,28 @@ var Role = require('mongoose').model('Role');
 var pjson = require('../package.json');
 var userController = exports;
 
-userController.getToken = function (user, callback) {
+var populateQuery = [{
+    path: 'role',
+    model: 'Role'
+}, {
+    path: 'passport',
+    model: 'Passport',
+    populate: [{
+        path: 'season',
+        model: 'Season',
+        populate: {
+            path: 'colors.color',
+            model: 'Color'
+        }
+
+    }, {
+        path: 'figure',
+        model: 'Figure'
+
+    }]
+}];
+
+userController.getToken = function(user, callback) {
     var token = jwt.sign(user, pjson.secret, {
         expiresIn: '1 year' // expires in 24 hours
     });
@@ -17,14 +38,14 @@ userController.getToken = function (user, callback) {
     });
 };
 
-userController.checkToken = function (req, next, callback) {
+userController.checkToken = function(req, next, callback) {
     // check header for token
     // var token = req.headers['x-access-token'];
     var token = req.headers.authorization || req.query.token || req.headers['x-access-token'];
     // decode token
     if (token) {
         // verifies secret and checks exp
-        jwt.verify(token, pjson.secret, function (err, decoded) {
+        jwt.verify(token, pjson.secret, function(err, decoded) {
             if (err) {
                 callback({
                     success: false,
@@ -47,53 +68,36 @@ userController.checkToken = function (req, next, callback) {
     }
 };
 
-userController.getProfile = function (id, callback) {
-    User.findOne({
-            _id: id
-        })
-        .populate('role')
-        .populate('passport')
-        .exec(function (err, user) {
-            if (err) {
-                callback(err)
+userController.getProfile = function(identifier, callback) {
+    var query = {};
+    if (identifier) {
+        query.username = identifier;
+    }
+
+
+
+    var result = User.findOne(query).populate(populateQuery);
+    result.exec(function(err, data) {
+
+        if (data) {
+            callback(data, err);
+        } else {
+            query = {};
+            if (identifier) {
+                query._id = identifier;
             }
-            if (!user) {
-                callback({
-                    success: false,
-                    message: "User not found."
-                });
-            }
-            var populateQuery = [{
-                path: 'passport.season',
-                model: 'Season'
-            }, {
-                path: 'passport.figure',
-                model: 'Figure'
-            }];
-            var options = {
-                path: 'passport.season',
-                model: 'Season'
-            };
 
-            user.populate(populateQuery, function (err, user) {
-
-                var options = {
-                    path: 'passport.season.colors.color',
-                    model: 'Color'
-                };
-                user.populate(options, function (err, user) {
-
-                    callback({
-                        success: true,
-                        user: user
-                    });
-                });
+            var result = User.findOne(query).populate(populateQuery);
+            result.exec(function(err, data) {
+                callback(data, err);
             });
-        });
+        }
+
+    });
 };
 
-userController.getAll = function (callback) {
-    User.find({}).populate('role').exec(function (err, users) {
+userController.getAll = function(callback) {
+    User.find({}).populate(populateQuery).exec(function(err, users) {
         if (err) {
             return next(err);
         }
@@ -104,10 +108,10 @@ userController.getAll = function (callback) {
     })
 };
 
-userController.createUser = function (callback) {
+userController.createUser = function(callback) {
     User.findOne({
         'username': username
-    }, function (err, user) {
+    }, function(err, user) {
         // if there are any errors, return the error
         if (err)
             return callback(err);
@@ -130,7 +134,7 @@ userController.createUser = function (callback) {
             newUser.role = req.body.role; ///for now
 
             // save the user
-            newUser.save(function (err) {
+            newUser.save(function(err) {
                 if (err)
                     throw err;
                 return callback(newUser);
@@ -140,30 +144,38 @@ userController.createUser = function (callback) {
     });
 }
 
-userController.updateUser = function (userData, callback) {
+userController.updateUser = function(identifier, passport, callback) {
+    var query = {};
+    if (identifier) {
+        query.username = identifier;
+    }
 
-    User.findOne({
-        '_id': userData.userID
-    }, function (err, user) {
-        // if there are any errors, return the error
-        if (err)
-            return callback(err);
+    User.findOneAndUpdate(query,
+        passport, {
+            autoIndexId: false,
+            upsert: false,
+            new: true
+        },
+        function(err, data) {
+            if (data) {
+                callback(data, err);
+            } else {
+                var query = {};
+                if (identifier) {
+                    query._id = identifier;
+                }
 
-        // check to see if theres already a user with that email
-        if (user) {
-            user.passport = userData.passport;
-            user.save();
-            return callback({
-                success: true,
-                message: "User updated",
-                user: user
-            });
-        } else {
-            callback({
-                success: false,
-                message: "User not found."
-            });
+                User.findOneAndUpdate(query,
+                    passport, {
+                        autoIndexId: false,
+                        upsert: false,
+                        new: true
+                    },
+                    function(err, data) {
+                        callback(data, err);
+                    }
+                );
+            }
         }
-
-    });
-}
+    );
+};
