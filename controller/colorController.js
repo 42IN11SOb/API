@@ -5,10 +5,7 @@ controller.getColors = function(callback) {
     Color.find({})
         .exec(function(err, data) {
 
-            callback({
-                success: true,
-                colors: data
-            }, err);
+            callback(data, err);
         });
 };
 

@@ -74,8 +74,6 @@ userController.getProfile = function(identifier, callback) {
         query.username = identifier;
     }
 
-
-
     var result = User.findOne(query).populate(populateQuery);
     result.exec(function(err, data) {
 
@@ -101,10 +99,7 @@ userController.getAll = function(callback) {
         if (err) {
             return next(err);
         }
-        callback({
-            success: true,
-            users: users
-        });
+        callback(users);
     })
 };
 

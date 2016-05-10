@@ -5,10 +5,7 @@ controller.getFigures = function(callback) {
     Figure.find({})
         .exec(function(err, data) {
 
-            callback({
-                success: true,
-                figures: data
-            }, err);
+            callback( data, err);
         });
 };
 

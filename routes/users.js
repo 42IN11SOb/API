@@ -7,35 +7,51 @@ var middlewares = require('../middlewares/middlewares');
 /* GET users listing. */
 router.get('/', function(req, res) {
     controller.getAll(function(response) {
-        res.json(response);
+        res.json({
+            success: true,
+            data: response
+        });
+
     });
 });
 
 /* GET users listing. */
 router.put('/:name', function(req, res) {
     controller.updateUser(req.params.name, req.body, function(response) {
-        res.json(response);
+        res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
 //isLoggedIn midleware checkt of user ingelogd is
 router.get('/profile', middlewares.isLoggedIn, function(req, res) {
     controller.getProfile(req.userID, function(response) {
-        res.json(response);
+        res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
 //isLoggedIn midleware checkt of user ingelogd is
 router.get('/:name', middlewares.isLoggedIn, function(req, res) {
     controller.getProfile(req.params.name, function(response) {
-        res.json(response);
+        res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
 router.put('/profile', middlewares.isLoggedIn, function(req, res) {
     req.body.userID = req.userID;
     controller.updateUser(req.body, function(response) {
-        res.json(response);
+        res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
@@ -51,7 +67,10 @@ router.post('/login', passport.authenticate('local-login', {
     session: false
 }), function(req, res) {
     controller.getToken(req.user, function(response) {
-        res.json(response);
+        res.json({
+            success: true,
+            data: response
+        });
     });
 });
 

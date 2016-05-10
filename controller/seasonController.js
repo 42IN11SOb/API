@@ -5,10 +5,7 @@ controller.getSeasons = function(callback) {
     Season.find({}).populate("colors.color")
         .exec(function(err, data) {
 
-            callback({
-                success: true,
-                seasons: data
-            }, err);
+            callback( data, err);
         });
 };
 

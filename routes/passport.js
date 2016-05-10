@@ -7,8 +7,10 @@ var middlewares = require('../middlewares/middlewares');
 router.get('/', middlewares.isLoggedIn, function (req, res, next) {
     controller.getPassports(function callback(data, err) {
         if (err) return;
-
-        res.json(data);
+         res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
@@ -16,7 +18,10 @@ router.get('/', middlewares.isLoggedIn, function (req, res, next) {
 router.post('/', middlewares.isLoggedIn, function (req, res, next) {
     controller.createPassport(req.body, function callback(data, err) {
         if (err) return;
-        res.json(data);
+        res.json({
+            success: true,
+            data: response
+        });
     });
 
 });
@@ -25,8 +30,10 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
 router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
     controller.getPassport(req.params.name, function callback(data, err) {
         if (err) return;
-
-        res.json(data);
+        res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
@@ -35,8 +42,10 @@ router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
     var passport = req.body;
     controller.updatePassport(req.params.name, passport, function callback(data, err) {
         if (err) return;
-
-        res.json(data);
+         res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
@@ -45,8 +54,10 @@ router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
     var passport = req.body;
     controller.deletePassport(req.params.name, function callback(data, err) {
         if (err) return;
-
-        res.json(data);
+         res.json({
+            success: true,
+            data: response
+        });
     });
 });
 
