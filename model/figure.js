@@ -21,7 +21,8 @@ var figure = new Schema({
         type: [String]
     },
     img: {
-        type: String
+        type: String,
+        default: 'https://www.perfectlybasics.nl/uploads/Stylefile/_thumbs240/160201-h-lijn-illustratie-intro.jpg'
     },
 });
 
