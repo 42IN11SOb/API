@@ -9,7 +9,7 @@ router.get('/', middlewares.isLoggedIn, function (req, res, next) {
         if (err) return;
          res.json({
             success: true,
-            data: response
+            data: data
         });
     });
 });
@@ -20,7 +20,7 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
         if (err) return;
         res.json({
             success: true,
-            data: response
+            data: data
         });
     });
 
@@ -32,7 +32,7 @@ router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
         if (err) return;
         res.json({
             success: true,
-            data: response
+            data: data
         });
     });
 });
@@ -44,7 +44,7 @@ router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
         if (err) return;
          res.json({
             success: true,
-            data: response
+            data: data
         });
     });
 });
@@ -56,7 +56,7 @@ router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
         if (err) return;
          res.json({
             success: true,
-            data: response
+            data: data
         });
     });
 });
