@@ -15,7 +15,7 @@ mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/project
 //var monk = require('monk');
 //var db = monk('localhost:27017/bartimeus');
 
-var models = ['user', 'color', 'figure', 'passport', 'role', 'season'];
+var models = ['user', 'color', 'figure', 'passport', 'role', 'season', 'page'];
 
 var l = models.length;
 for (var i = l - 1; i >= 0; i--) {
