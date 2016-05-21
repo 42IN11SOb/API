@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var controller = require('../controller/pageController.js');
+var controller = require('../controller/newsController.js');
 var middlewares = require('../middlewares/middlewares');
 
 //isLoggedIn midleware checkt of user ingelogd is
-router.get('/', function (req, res, next) {
-    controller.getPages(function callback(data, err) {
+router.get('/', middlewares.isLoggedIn, function (req, res, next) {
+    controller.getNewss(function callback(data, err) {
         if (err) return;
 
         res.json({
@@ -15,9 +15,9 @@ router.get('/', function (req, res, next) {
     });
 });
 
-//add page
+//add news
 router.post('/', middlewares.isLoggedIn, function (req, res, next) {
-    controller.createPage(req.body, function callback(data, err) {
+    controller.createNews(req.body, function callback(data, err) {
         if (err) return;
         res.json({
             success: true,
@@ -27,10 +27,10 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
 
 });
 
-//get single page
-router.get('/:name', function (req, res, next) {
-    var page = req.body;
-    controller.getPage(req.params.name, function callback(data, err) {
+//get single news
+router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
+    var news = req.body;
+    controller.getNews(req.params.name, function callback(data, err) {
         if (err) return;
 
         res.json({
@@ -40,10 +40,10 @@ router.get('/:name', function (req, res, next) {
     });
 });
 
-//get single page
+//get single news
 router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
-    var page = req.body;
-    controller.updatePage(req.params.name, page, function callback(data, err) {
+    var news = req.body;
+    controller.updateNews(req.params.name, news, function callback(data, err) {
         if (err) return;
 
         res.json({
@@ -53,10 +53,10 @@ router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
     });
 });
 
-//get single page
+//get single news
 router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
-    var page = req.body;
-    controller.deletePage(req.params.name, function callback(data, err) {
+    var news = req.body;
+    controller.deleteNews(req.params.name, function callback(data, err) {
         if (err) return;
 
         res.json({

@@ -15,7 +15,7 @@ mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/project
 //var monk = require('monk');
 //var db = monk('localhost:27017/bartimeus');
 
-var models = ['user', 'color', 'figure', 'passport', 'role', 'season', 'page'];
+var models = ['user', 'color', 'figure', 'passport', 'role', 'season', 'page', 'news'];
 
 var l = models.length;
 for (var i = l - 1; i >= 0; i--) {
@@ -25,6 +25,7 @@ for (var i = l - 1; i >= 0; i--) {
 var app = express();
 
 // Routes
+var news = require('./routes/news');
 var users = require('./routes/users');
 var roles = require('./routes/roles');
 var admin = require('./routes/admin');
@@ -68,6 +69,7 @@ app.use('/colors', colors);
 app.use('/seasons', seasons);
 app.use('/figures', figures);
 app.use('/passports', passports);
+app.use('/news', passports);
 
 // Middleware error handling
 app.use(middlewares.ERROR404);
