@@ -61,6 +61,7 @@ app.use(passport.initialize());
 
 // Define all routes
 app.use('/', routes);
+app.use('/news', news);
 app.use('/roles', roles);
 app.use('/users', users);
 app.use('/pages', pages);
@@ -69,7 +70,6 @@ app.use('/colors', colors);
 app.use('/seasons', seasons);
 app.use('/figures', figures);
 app.use('/passports', passports);
-app.use('/news', passports);
 
 // Middleware error handling
 app.use(middlewares.ERROR404);
