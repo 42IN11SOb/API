@@ -1,21 +1,21 @@
-var Page = require('mongoose').model('Page');
+var News = require('mongoose').model('News');
 var controller = exports;
 
-controller.getPages = function (callback) {
-    Page.find({})
+controller.getNewss = function (callback) {
+    News.find({})
         .exec(function (err, data) {
 
             callback(data, err);
         });
 };
 
-controller.getPage = function (identifier, callback) {
+controller.getNews = function (identifier, callback) {
     var query = {};
     if (identifier) {
-        query.name = identifier;
+        query.title = identifier;
     }
 
-    var result = Page.findOne(query)
+    var result = News.findOne(query)
     result.exec(function (err, data) {
 
         if (data) {
@@ -26,7 +26,7 @@ controller.getPage = function (identifier, callback) {
                 query._id = identifier;
             }
 
-            var result = Page.findOne(query)
+            var result = News.findOne(query)
             result.exec(function (err, data) {
                 callback(data, err);
             });
@@ -35,14 +35,14 @@ controller.getPage = function (identifier, callback) {
     });
 };
 
-controller.updatePage = function (identifier, page, callback) {
+controller.updateNews = function (identifier, news, callback) {
     var query = {};
     if (identifier) {
-        query.name = identifier;
+        query.title = identifier;
     }
 
-    Page.findOneAndUpdate(query,
-        page, {
+    News.findOneAndUpdate(query,
+        news, {
             autoIndexId: false,
             upsert: false,
             new: true
@@ -56,8 +56,8 @@ controller.updatePage = function (identifier, page, callback) {
                     query._id = identifier;
                 }
 
-                Page.findOneAndUpdate(query,
-                    page, {
+                News.findOneAndUpdate(query,
+                    news, {
                         autoIndexId: false,
                         upsert: false,
                         new: true
@@ -71,29 +71,29 @@ controller.updatePage = function (identifier, page, callback) {
     );
 };
 
-controller.createPage = function (page, callback) {
-    console.log(page);
-    var newPage = new Page();
+controller.createNews = function (news, callback) {
+    console.log(news);
+    var newNews = new News();
 
-    for (var item in page) {
-        newPage[item] = page[item];
+    for (var item in news) {
+        newNews[item] = news[item];
     }
 
-    newPage.save(function (err) {
+    newNews.save(function (err) {
         if (err) {
             throw err;
         }
-        return callback(newPage);
+        return callback(newNews);
     });
 };
 
-controller.deletePage = function (identifier, callback) {
+controller.deleteNews = function (identifier, callback) {
     var query = {};
     if (identifier) {
         query.name = identifier;
     }
 
-    Page.findOneAndRemove(query,
+    News.findOneAndRemove(query,
         function (err, data) {
             if (data) {
                 callback(data, err);
@@ -103,7 +103,7 @@ controller.deletePage = function (identifier, callback) {
                     query._id = identifier;
                 }
 
-                Page.findOneAndRemove(query,
+                News.findOneAndRemove(query,
                     function (err, data) {
                         data.status = "deleted";
                         callback(data, err);
