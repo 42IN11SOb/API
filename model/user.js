@@ -14,6 +14,11 @@ var userSchema = new Schema({
         required: true,
         select: false
     },
+    male: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
     active: {
         type: Boolean,
         required: true,
