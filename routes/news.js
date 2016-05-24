@@ -4,7 +4,7 @@ var controller = require('../controller/newsController.js');
 var middlewares = require('../middlewares/middlewares');
 
 //isLoggedIn midleware checkt of user ingelogd is
-router.get('/', middlewares.isLoggedIn, function (req, res, next) {
+router.get('/', function (req, res, next) {
     controller.getNewss(function callback(data, err) {
         if (err) return;
 
@@ -28,7 +28,7 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
 });
 
 //get single news
-router.get('/:name', middlewares.isLoggedIn, function (req, res, next) {
+router.get('/:name', function (req, res, next) {
     var news = req.body;
     controller.getNews(req.params.name, function callback(data, err) {
         if (err) return;
