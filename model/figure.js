@@ -24,6 +24,11 @@ var figure = new Schema({
         type: String,
         default: 'https://www.perfectlybasics.nl/uploads/Stylefile/_thumbs240/160201-h-lijn-illustratie-intro.jpg'
     },
+    male: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 });
 
 var Figure = mongoose.model('Figure', figure);
