@@ -35,7 +35,8 @@ var userSchema = new Schema({
     },
     role: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role'
+        ref: 'Role',
+        default: "574c284cbc1dbc594b03e288"
     },
     passport: {
         type: mongoose.Schema.Types.ObjectId,

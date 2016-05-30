@@ -54,7 +54,10 @@ userController.checkToken = function(req, next, callback) {
             } else {
                 req.decoded = decoded;
                 req.userID = decoded._doc._id;
-                next();
+                callback({
+                    success: true,
+                    message: 'Succesfully authenticated'
+                });
             }
         });
 

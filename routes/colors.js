@@ -3,10 +3,16 @@ var router = express.Router();
 var controller = require('../controller/colorController.js');
 var middlewares = require('../middlewares/middlewares');
 
-//isLoggedIn midleware checkt of user ingelogd is
-router.get('/', middlewares.isLoggedIn, function(req, res, next) {
+//isAuthorized midleware checkt of user ingelogd is
+router.get('/', function (req, res, next) {
     controller.getColors(function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
         res.json({
             success: true,
             data: data
@@ -15,9 +21,15 @@ router.get('/', middlewares.isLoggedIn, function(req, res, next) {
 });
 
 //add season
-router.post('/', middlewares.isLoggedIn, function(req, res, next) {
+router.post('/', function (req, res, next) {
     controller.createColor(req.body, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
         res.json({
             success: true,
             data: data
@@ -27,10 +39,16 @@ router.post('/', middlewares.isLoggedIn, function(req, res, next) {
 });
 
 //get single seaons
-router.get('/:name', middlewares.isLoggedIn, function(req, res, next) {
+router.get('/:name', function (req, res, next) {
     var color = req.body;
     controller.getColor(req.params.name, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
         res.json({
             success: true,
             data: data
@@ -39,10 +57,16 @@ router.get('/:name', middlewares.isLoggedIn, function(req, res, next) {
 });
 
 //get single seaons
-router.put('/:name', middlewares.isLoggedIn, function(req, res, next) {
+router.put('/:name', function (req, res, next) {
     var color = req.body;
     controller.updateColor(req.params.name, color, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
         res.json({
             success: true,
             data: data
@@ -51,10 +75,16 @@ router.put('/:name', middlewares.isLoggedIn, function(req, res, next) {
 });
 
 //get single seaons
-router.delete('/:name', middlewares.isLoggedIn, function(req, res, next) {
+router.delete('/:name', function (req, res, next) {
     var color = req.body;
     controller.deleteColor(req.params.name, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
         res.json({
             success: true,
             data: data

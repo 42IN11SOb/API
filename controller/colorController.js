@@ -1,22 +1,22 @@
 var Color = require('mongoose').model('Color');
 var controller = exports;
 
-controller.getColors = function(callback) {
+controller.getColors = function (callback) {
     Color.find({})
-        .exec(function(err, data) {
+        .exec(function (err, data) {
 
             callback(data, err);
         });
 };
 
-controller.getColor = function(identifier, callback) {
+controller.getColor = function (identifier, callback) {
     var query = {};
     if (identifier) {
         query.name = identifier;
     }
 
     var result = Color.findOne(query)
-    result.exec(function(err, data) {
+    result.exec(function (err, data) {
 
         if (data) {
             callback(data, err);
@@ -27,15 +27,14 @@ controller.getColor = function(identifier, callback) {
             }
 
             var result = Color.findOne(query)
-            result.exec(function(err, data) {
+            result.exec(function (err, data) {
                 callback(data, err);
             });
         }
-
     });
 };
 
-controller.updateColor = function(identifier, color, callback) {
+controller.updateColor = function (identifier, color, callback) {
     var query = {};
     if (identifier) {
         query.name = identifier;
@@ -47,7 +46,7 @@ controller.updateColor = function(identifier, color, callback) {
             upsert: false,
             new: true
         },
-        function(err, data) {
+        function (err, data) {
             if (data) {
                 callback(data, err);
             } else {
@@ -62,7 +61,7 @@ controller.updateColor = function(identifier, color, callback) {
                         upsert: false,
                         new: true
                     },
-                    function(err, data) {
+                    function (err, data) {
                         callback(data, err);
                     }
                 );
@@ -71,7 +70,7 @@ controller.updateColor = function(identifier, color, callback) {
     );
 };
 
-controller.createColor = function(color, callback) {
+controller.createColor = function (color, callback) {
     console.log(color);
     var newColor = new Color();
 
@@ -79,7 +78,7 @@ controller.createColor = function(color, callback) {
         newColor[item] = color[item];
     }
 
-    newColor.save(function(err) {
+    newColor.save(function (err) {
         if (err) {
             throw err;
         }
@@ -87,14 +86,14 @@ controller.createColor = function(color, callback) {
     });
 };
 
-controller.deleteColor = function(identifier, callback) {
+controller.deleteColor = function (identifier, callback) {
     var query = {};
     if (identifier) {
         query.name = identifier;
     }
 
     Color.findOneAndRemove(query,
-        function(err, data) {
+        function (err, data) {
             if (data) {
                 callback(data, err);
             } else {
@@ -104,7 +103,7 @@ controller.deleteColor = function(identifier, callback) {
                 }
 
                 Color.findOneAndRemove(query,
-                    function(err, data) {
+                    function (err, data) {
                         data.status = "deleted";
                         callback(data, err);
                     }

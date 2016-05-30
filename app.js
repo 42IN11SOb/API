@@ -10,6 +10,34 @@ var bodyParser = require('body-parser');
 var middlewares = require('./middlewares/middlewares');
 var cookieParser = require('cookie-parser');
 
+var fs = require('fs');
+var util = require('util');
+var logFile = fs.createWriteStream('logs/log.txt', {
+    flags: 'a'
+});
+var logStdout = process.stdout;
+
+console.log = function () {
+    function formatConsoleDate(date) {
+        var hour = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+        var milliseconds = date.getMilliseconds();
+
+        return '[' +
+            ((hour < 10) ? '0' + hour : hour) +
+            ':' +
+            ((minutes < 10) ? '0' + minutes : minutes) +
+            ':' +
+            ((seconds < 10) ? '0' + seconds : seconds) +
+            '] ';
+    }
+
+    logFile.write(util.format.apply(null, [formatConsoleDate(new Date)].concat(arguments[0])) + '\n');
+    logStdout.write(util.format.apply(null, [formatConsoleDate(new Date)].concat(arguments[0])) + '\n');
+}
+console.error = console.log;
+
 mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/projectpep');
 //var mongo = require('mongodb');
 //var monk = require('monk');
@@ -28,7 +56,6 @@ var app = express();
 var news = require('./routes/news');
 var users = require('./routes/users');
 var roles = require('./routes/roles');
-var admin = require('./routes/admin');
 var pages = require('./routes/pages');
 var routes = require('./routes/index');
 var colors = require('./routes/colors');
@@ -60,12 +87,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 // Define all routes
+app.use(middlewares.isAuthorized);
 app.use('/', routes);
 app.use('/news', news);
 app.use('/roles', roles);
 app.use('/users', users);
 app.use('/pages', pages);
-app.use('/admin', admin);
 app.use('/colors', colors);
 app.use('/seasons', seasons);
 app.use('/figures', figures);

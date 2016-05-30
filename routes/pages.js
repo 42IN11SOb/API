@@ -6,7 +6,13 @@ var middlewares = require('../middlewares/middlewares');
 //isLoggedIn midleware checkt of user ingelogd is
 router.get('/', function (req, res, next) {
     controller.getPages(function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
 
         res.json({
             success: true,
@@ -16,9 +22,15 @@ router.get('/', function (req, res, next) {
 });
 
 //add page
-router.post('/', middlewares.isLoggedIn, function (req, res, next) {
+router.post('/', function (req, res, next) {
     controller.createPage(req.body, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
         res.json({
             success: true,
             data: data
@@ -31,7 +43,13 @@ router.post('/', middlewares.isLoggedIn, function (req, res, next) {
 router.get('/:name', function (req, res, next) {
     var page = req.body;
     controller.getPage(req.params.name, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
 
         res.json({
             success: true,
@@ -41,10 +59,16 @@ router.get('/:name', function (req, res, next) {
 });
 
 //get single page
-router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
+router.put('/:name', function (req, res, next) {
     var page = req.body;
     controller.updatePage(req.params.name, page, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
 
         res.json({
             success: true,
@@ -54,10 +78,16 @@ router.put('/:name', middlewares.isLoggedIn, function (req, res, next) {
 });
 
 //get single page
-router.delete('/:name', middlewares.isLoggedIn, function (req, res, next) {
+router.delete('/:name', function (req, res, next) {
     var page = req.body;
     controller.deletePage(req.params.name, function callback(data, err) {
-        if (err) return;
+        if (err) {
+            res.json({
+                success: false,
+                data: err
+            });
+            return;
+        }
 
         res.json({
             success: true,
