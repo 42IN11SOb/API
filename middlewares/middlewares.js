@@ -47,11 +47,12 @@ middlewares.isAuthorized = function isAuthorized(req, res, next) {
     var userController = require('../controller/userController');
     var url = req.url;
 
-    if (url.split("\/").length > 2) {
-        url = url.replace(/\/(?=[^\/]*$).*/, '/:name');
-    }
-
     var roles = authJSON[req.method + url];
+
+    if (url.split("\/").length > 2 && !roles) {
+        url = url.replace(/\/(?=[^\/]*$).*/, '/:name');
+        roles = authJSON[req.method + url];
+    }
 
     if (!roles) {
         roles = ["admin"];

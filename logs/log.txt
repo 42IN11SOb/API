@@ -9400,3 +9400,5 @@
 [15:02:38]  Method: GET, url: /roles
 [15:03:01]  Method: GET, BaseUrl: /passport, User: test
 [15:03:04]  Method: GET, url: /passports
+[15:18:16]  Method: GET, BaseUrl: /users/:name, User: test
+[15:30:54]  Method: GET, BaseUrl: /users/:name, User: test
