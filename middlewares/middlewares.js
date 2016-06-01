@@ -1,6 +1,5 @@
 var middlewares = exports;
 var authJSON = require('../config/auth.json');
-var useragent = require('express-useragent');
 
 middlewares.CORS = function CORS(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -45,14 +44,12 @@ middlewares.isLoggedIn = function isLoggedIn(req, res, next) {
 };
 
 middlewares.getUserAgent = function getUserAgent(req, res, next) {
-    var source = req.headers['user-agent'],
-    ua = useragent.parse(source);
-
-    console.log(ua);
+    //console.log(req.useragent);
     next();
 }
 
 middlewares.isAuthorized = function isAuthorized(req, res, next) {
+
     var userController = require('../controller/userController');
     var url = req.url;
 

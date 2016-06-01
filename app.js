@@ -51,6 +51,7 @@ for (var i = l - 1; i >= 0; i--) {
 }
 
 var app = express();
+var useragent = require('express-useragent');
 
 // Routes
 var news = require('./routes/news');
@@ -87,6 +88,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 // Define all routes
+app.use(useragent.express());
 app.use(middlewares.getUserAgent);
 app.use(middlewares.isAuthorized);
 app.use('/', routes);
