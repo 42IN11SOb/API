@@ -1,5 +1,6 @@
 var middlewares = exports;
 var authJSON = require('../config/auth.json');
+var useragent = require('express-useragent');
 
 middlewares.CORS = function CORS(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -43,32 +44,12 @@ middlewares.isLoggedIn = function isLoggedIn(req, res, next) {
     });
 };
 
-middlewares.getUserAgent = function getUserAgent() {
-    var ua = req.headers['user-agent'],
-        $ = {};
+middlewares.getUserAgent = function getUserAgent(req, res, next) {
+    var source = req.headers['user-agent'],
+    ua = useragent.parse(source);
 
-    if (/mobile/i.test(ua))
-        $.Mobile = true;
-
-    if (/like Mac OS X/.test(ua)) {
-        $.iOS = /CPU( iPhone)? OS ([0-9\._]+) like Mac OS X/.exec(ua)[2].replace(/_/g, '.');
-        $.iPhone = /iPhone/.test(ua);
-        $.iPad = /iPad/.test(ua);
-    }
-
-    if (/Android/.test(ua))
-        $.Android = /Android ([0-9\.]+)[\);]/.exec(ua)[1];
-
-    if (/webOS\//.test(ua))
-        $.webOS = /webOS\/([0-9\.]+)[\);]/.exec(ua)[1];
-
-    if (/(Intel|PPC) Mac OS X/.test(ua))
-        $.Mac = /(Intel|PPC) Mac OS X ?([0-9\._]*)[\)\;]/.exec(ua)[2].replace(/_/g, '.') || true;
-
-    if (/Windows NT/.test(ua))
-        $.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
-
-    console.log($);
+    console.log(ua);
+    next();
 }
 
 middlewares.isAuthorized = function isAuthorized(req, res, next) {

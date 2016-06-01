@@ -87,6 +87,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 // Define all routes
+app.use(middlewares.getUserAgent);
 app.use(middlewares.isAuthorized);
 app.use('/', routes);
 app.use('/news', news);
