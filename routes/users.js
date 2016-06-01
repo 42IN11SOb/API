@@ -27,7 +27,7 @@ router.put('/:name', function (req, res) {
 
 //isLoggedIn midleware checkt of user ingelogd is
 router.get('/profile', middlewares.isLoggedIn, function (req, res) {
-    controller.getProfile(req.req.user._id, function (response) {
+    controller.getProfile(req.user._id, function (response) {
         res.json({
             success: true,
             data: response
