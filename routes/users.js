@@ -67,7 +67,7 @@ router.post('/login', passport.authenticate('local-login', {
     session: false
 }), function (req, res) {
     controller.getToken(req.user, function (resp) {
-        controller.getProfile(req.userID, function (response) {
+        controller.getProfile(req.user._id, function (response) {
             resp.profile = response;
 
             res.json({
