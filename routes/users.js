@@ -46,7 +46,7 @@ router.get('/:name', middlewares.isLoggedIn, function (req, res) {
 });
 
 router.put('/profile', middlewares.isLoggedIn, function (req, res) {
-    req.body.userID = req.userID;
+    req.body.userID = req.user._id;
     controller.updateUser(req.body, function (response) {
         res.json({
             success: true,
@@ -67,7 +67,7 @@ router.post('/login', passport.authenticate('local-login', {
     session: false
 }), function (req, res) {
     controller.getToken(req.user, function (resp) {
-        controller.getProfile(req.userID, function (response) {
+        controller.getProfile(req.user._id, function (response) {
             resp.profile = response;
 
             res.json({

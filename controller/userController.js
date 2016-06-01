@@ -49,14 +49,14 @@ userController.checkToken = function(req, next, callback) {
             if (err) {
                 callback({
                     success: false,
-                    message: 'Failed to authenticate token.'
+                    data: 'Failed to authenticate token.'
                 });
             } else {
                 req.decoded = decoded;
                 req.userID = decoded._doc._id;
                 callback({
                     success: true,
-                    message: 'Succesfully authenticated'
+                    data: 'Succesfully authenticated'
                 });
             }
         });
@@ -66,7 +66,7 @@ userController.checkToken = function(req, next, callback) {
         // return an error
         callback({
             success: false,
-            message: 'No token provided. Or token invalid'
+            data: 'No token provided. Or token invalid'
         });
     }
 };
