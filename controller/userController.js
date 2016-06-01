@@ -79,7 +79,6 @@ userController.getProfile = function(identifier, callback) {
 
     var result = User.findOne(query).populate(populateQuery);
     result.exec(function(err, data) {
-
         if (data) {
             callback(data, err);
         } else {
