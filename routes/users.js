@@ -84,7 +84,7 @@ router.post('/logout', function (req, res) {
 
     res.json({
         success: true,
-        message: "Logout succesful."
+        data: "Logout succesful."
     });
 });
 
@@ -92,7 +92,7 @@ router.get('/loggedIn', middlewares.isLoggedIn, function (req, res) {
     if (req.userID != null) {
         res.json({
             success: true,
-            message: "User is logged in."
+            data: "User is logged in."
         });
     }
 });
