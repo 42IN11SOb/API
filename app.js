@@ -43,7 +43,7 @@ mongoose.connect('mongodb://projectpep:42in11sob@ds017070.mlab.com:17070/project
 //var monk = require('monk');
 //var db = monk('localhost:27017/bartimeus');
 
-var models = ['user', 'color', 'figure', 'passport', 'role', 'season', 'page', 'news'];
+var models = ['user', 'color', 'figure', 'passport', 'role', 'season', 'page', 'news', 'pepdag', 'pepdagdates'];
 
 var l = models.length;
 for (var i = l - 1; i >= 0; i--) {
@@ -63,6 +63,8 @@ var colors = require('./routes/colors');
 var figures = require('./routes/figure');
 var seasons = require('./routes/seasons');
 var passports = require('./routes/passport');
+var pepdag = require('./routes/pepdag');
+var pepdagdates = require('./routes/pepdagdates');
 
 require('./config/passport')(passport); // pass passport for configuration
 
@@ -100,6 +102,8 @@ app.use('/colors', colors);
 app.use('/seasons', seasons);
 app.use('/figures', figures);
 app.use('/passports', passports);
+app.use('/pepdag', pepdag);
+app.use('/pepdagdates', pepdagdates);
 
 // Middleware error handling
 app.use(middlewares.ERROR404);
