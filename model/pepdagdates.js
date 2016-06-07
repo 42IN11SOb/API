@@ -10,7 +10,7 @@ var pepdagdates = new Schema({
     datum: {
         type: Date,
         required: true
-    }
+    },
     man: {
     	type: Boolean,
     	required: true,
