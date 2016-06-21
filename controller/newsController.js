@@ -90,7 +90,7 @@ controller.createNews = function (news, callback) {
 controller.deleteNews = function (identifier, callback) {
     var query = {};
     if (identifier) {
-        query.name = identifier;
+        query.title = identifier;
     }
 
     News.findOneAndRemove(query,
